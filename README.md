@@ -1,5 +1,5 @@
 # dev-ops-exercise
-A simple exercise for our futures dev-ops to promote their skills
+A simple exercise for our future dev-ops to promote their skills
 
 ## INTRO
 
