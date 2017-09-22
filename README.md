@@ -9,7 +9,7 @@ A simple exercise for our futures dev-ops to promote their skills
 
    Get your environment ready.
 
-   Just know that we develop on Mac and deploy in production on Google Cloud Platform.
+   Just know that we develop on Osx/Sierra and wish to deploy an efficient `image` in production on Google Cloud Platform.
 
    Ready for action?
 
@@ -29,7 +29,7 @@ A simple exercise for our futures dev-ops to promote their skills
 
    You could use gcloud SDK and minikube (local Kubernetes) to do it locally.
 
-   We expect to have least 2 replicas, and expect you to demonstrate us how to scale to 5.
+   We expect to have least 2 replicas (resiliency), and expect you to demonstrate to us how to scale to 5.
 
 ## Automation
 
@@ -39,9 +39,10 @@ A simple exercise for our futures dev-ops to promote their skills
 
 ## Expected Deliverables
 
-   A GitHub Pull-Request to YOUR DUPLICATED REPO, containing:
+   A GitHub Pull-Request to YOUR FORKED REPO, containing:
 
-   What your consider is necessary for any developer to use you automated solution.
+   1. What your consider is necessary for any developer to use your automated solution/service.
+   2. What you feel should be required (within the context of this exercise)
 
 ##  General Guidelines
 
@@ -49,13 +50,15 @@ A simple exercise for our futures dev-ops to promote their skills
 
    Spend some time on designing your solution. Think about operational use cases from the real world. Few examples:
 
-   Can you run your implementation multiple times without any problem?
-   What happens if a service crashes?
-   How would a new Version be deploy to replace the previous one?
-   How much effort will it take to create a new service? D.R.Y!
+       Can you run your implementation multiple times without any problem?
+       What happens if a service crashes?
+       How would a new Version be deployed to replace the previous one?
+       How would you organized a rollback?
+       How much effort will it take to create a new service? D.R.Y!
+       etc...
 
    And tell us how you decided on the solution you are coming up with.
 
-   We sincerely look forward to have you on our team and discuss further your approach to this task.
+   We sincerely look forward to your approach and solution to this task. And if satisfactory, we will discuss it together in the next meeting.
 
    Good luck!
