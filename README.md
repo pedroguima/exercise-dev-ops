@@ -19,17 +19,20 @@ A simple exercise for our future dev-ops to promote their skills.
 
 ## Packaging
 
-    We have 3 μServices: written in Go, using GRPC and protocol buffers, a Key/Value DB (LMDB).
+   We have 3 μServices: written in Go, using GRPC and protocol buffers, a Key/Value DB (LMDB).
 
-   We want to containerize them: the strategy is yours. We look forward to hearing your rationale.
+   ![Our little system](./dev-ops-exercise_201709.png)
+
+   We want to containerize them: the strategy is yours.
+   We look forward to hearing your rationale.
 
 ## Deployment
 
-   We want to deploy them on Google Cloud Platform and run them under Kubernetes (Google Container Engine).
+   We want to deploy them on __Google Cloud Platform__ and run them under __Kubernetes__ (Google Container Engine).
 
-   You could use gcloud SDK and minikube (local Kubernetes) to do it locally.
+   You could use __gcloud SDK__ and __minikube__ (local Kubernetes) to do it locally.
 
-   We expect to have least 2 replicas (resiliency), and expect you to demonstrate to us how to scale to 5.
+   We expect to have at least 2 replicas (resiliency), and expect you to demonstrate to us how to scale our cluster to 5 replicas.
 
 ## Automation
 
@@ -46,7 +49,7 @@ A simple exercise for our future dev-ops to promote their skills.
 
 ##  General Guidelines
 
-   Your implementation should be as simple as possible, yet well documented and robust (easy to use and maintain).
+   Your implementation should be as simple as possible, yet well documented and robust (easy to use and maintain/enhance).
 
    Spend some time on designing your solution. Think about operational use cases from the real world. Few examples:
 
@@ -72,7 +75,7 @@ In the first, go to the backend/ folder and from there start the backend, servin
     1> cd backend
     1> go run backend.go
 
-Second, start the server (our `front-end`):
+Second, start the server (our `front-end`) from the server/ folder:
 
     2> cd server
     2> go run server.go
@@ -82,7 +85,7 @@ Last, in the third terminal,  run the client:
     3> cd client
     3> go run client.go
 
-In this terminal you should receive a list of response from the `server`.
+In this third terminal you should receive a list of responses from the `server`.
 
 In the server terminal a response from the backend.
 
