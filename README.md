@@ -1,7 +1,7 @@
 # dev-ops-exercise
-A simple exercise for our futures dev-ops to promote their skills
+A simple exercise for our future dev-ops to promote their skills.
 
-## INTRO
+## Introduction
 
    Your mission, should you choose to accept it, involves the packaging and deployment of 3 μServices.
 
