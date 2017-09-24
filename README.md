@@ -62,3 +62,29 @@ A simple exercise for our future dev-ops to promote their skills.
    We sincerely look forward to your approach and solution to this task. And if satisfactory, we will discuss it together in the next meeting.
 
    Good luck!
+
+## If you are curious
+
+To run the backend, the server and the client, open 3 different terminals.
+
+In the first, go to the backend/ folder and from there start the backend, serving the DB:
+
+    1> cd backend
+    1> go run backend.go
+
+Second, start the server (our `front-end`):
+
+    2> cd server
+    2> go run server.go
+
+Last, in the third terminal,  run the client:
+
+    3> cd client
+    3> go run client.go
+
+In this terminal you should receive a list of response from the `server`.
+
+In the server terminal a response from the backend.
+
+In the backend a list of saved data.
+
