@@ -26,6 +26,9 @@ service RouteGuide {
   // position.
   rpc GetFeature(Point) returns (Feature) {}
 
+  // Saving the Feature to a Persistent ImMemDB
+  rpc SaveFeature(Feature) returns (SavedResult) {}
+
   // A server-to-client streaming RPC.
   //
   // Obtains the Features available within the given Rectangle.  Results are
@@ -103,4 +106,8 @@ message RouteSummary {
 
   // The duration of the traversal in seconds.
   int32 elapsed_time = 4;
+}
+
+message SavedResult {
+    bool ok = 1;
 }

@@ -40,28 +40,45 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	pb "github.com/tokencard/templateGRPC/routeguide"
+	pb "github.com/tokencard/dev-ops-exercise/src/routeguide"
 
-	"github.com/tokencard/templateGRPC/testdata"
+	"github.com/tokencard/dev-ops-exercise/src/testdata"
 )
 
 var (
-	tls        = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
-	certFile   = flag.String("cert_file", "", "The TLS cert file")
-	keyFile    = flag.String("key_file", "", "The TLS key file")
-	jsonDBFile = flag.String("json_db_file", "../testdata/route_guide_db.json", "A json file containing a list of features")
-	port       = flag.Int("port", 10000, "The server port")
+	tls         = flag.Bool("tls", false, "Connection uses TLS if true, else plain TCP")
+	certFile    = flag.String("cert_file", "", "The TLS cert file")
+	keyFile     = flag.String("key_file", "", "The TLS key file")
+	jsonDBFile  = flag.String("json_db_file", "../testdata/route_guide_db.json", "A json file containing a list of features")
+	port        = flag.Int("port", 8888, "The server port")
+	backendAddr = flag.String("backend", ":9999", "DB backend address")
 )
 
 type routeGuideServer struct {
 	savedFeatures []*pb.Feature
 	routeNotes    map[string][]*pb.RouteNote
+	backend       pb.RouteGuideClient
+}
+
+type Result struct {
+	res *pb.SavedResult
+	err error
 }
 
 // GetFeature returns the feature at the given point.
 func (s *routeGuideServer) GetFeature(ctx context.Context, point *pb.Point) (*pb.Feature, error) {
+	resChan := make(chan *Result)
 	for _, feature := range s.savedFeatures {
 		if proto.Equal(feature.Location, point) {
+
+			go func(s *routeGuideServer, feature *pb.Feature) {
+				// ADD REQ TO BACKEND-DB HERE TO SAVE IN LMDB DB
+				res, err := s.backend.SaveFeature(context.Background(), feature)
+				result := &Result{res, err}
+				resChan <- result
+			}(s, feature)
+			result := <-resChan
+			log.Printf("backend.Save() is: %v\n", result)
 			return feature, nil
 		}
 	}
@@ -89,21 +106,25 @@ func (s *routeGuideServer) ListFeatures(rect *pb.Rectangle, stream pb.RouteGuide
 func (s *routeGuideServer) RecordRoute(stream pb.RouteGuide_RecordRouteServer) error {
 	var pointCount, featureCount, distance int32
 	var lastPoint *pb.Point
+
 	startTime := time.Now()
 	for {
 		point, err := stream.Recv()
 		if err == io.EOF {
 			endTime := time.Now()
-			return stream.SendAndClose(&pb.RouteSummary{
+
+			routeSummary := &pb.RouteSummary{
 				PointCount:   pointCount,
 				FeatureCount: featureCount,
 				Distance:     distance,
 				ElapsedTime:  int32(endTime.Sub(startTime).Seconds()),
-			})
+			}
+			return stream.SendAndClose(routeSummary)
 		}
 		if err != nil {
 			return err
 		}
+
 		pointCount++
 		for _, feature := range s.savedFeatures {
 			if proto.Equal(feature.Location, point) {
@@ -140,6 +161,12 @@ func (s *routeGuideServer) RouteChat(stream pb.RouteGuide_RouteChatServer) error
 			}
 		}
 	}
+}
+
+func (s *routeGuideServer) SaveFeature(ctx context.Context, feature *pb.Feature) (*pb.SavedResult, error) {
+	var saveResult *pb.SavedResult
+	// DO NOTHING HERE
+	return saveResult, nil
 }
 
 // loadFeatures loads features from a JSON file.
@@ -208,10 +235,12 @@ func newServer() *routeGuideServer {
 
 func main() {
 	flag.Parse()
+	// SERVER
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+
 	var opts []grpc.ServerOption
 	if *tls {
 		if *certFile == "" {
@@ -226,7 +255,19 @@ func main() {
 		}
 		opts = []grpc.ServerOption{grpc.Creds(creds)}
 	}
+
+	s := newServer()
+
+	// Dialing the backend as a Client
+	conn, err := grpc.Dial(*backendAddr, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("fail to dial: %v", err)
+	}
+	s.backend = pb.NewRouteGuideClient(conn)
+
 	grpcServer := grpc.NewServer(opts...)
-	pb.RegisterRouteGuideServer(grpcServer, newServer())
+
+	pb.RegisterRouteGuideServer(grpcServer, s)
+	log.Printf("server listening on  :%d...\n", *port)
 	grpcServer.Serve(lis)
 }
