@@ -21,7 +21,7 @@ A simple exercise for our future dev-ops to promote their skills.
 
    We have 3 μServices: written in Go, using GRPC and protocol buffers, a Key/Value DB (LMDB).
 
-   ![Our little system](./dev-ops-exercise.png)
+   ![Our little system](./dev-ops-exercise_201709.png)
 
    We want to containerize them: the strategy is yours.
    We look forward to hearing your rationale.
