@@ -19,7 +19,7 @@ A simple exercise for our future dev-ops to promote their skills.
 
 ## Packaging
 
-   We have 3 μServices: written in Go, using GRPC and protocol buffers, a Key/Value DB (LMDB).
+   We have 3 μServices: written in Go, using GRPC and protocol buffers, a Key/Value DB (LMDB, a C library, requires its runtime).
 
    ![Our little system](./dev-ops-exercise_201709.png)
 
