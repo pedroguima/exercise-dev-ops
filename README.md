@@ -1,6 +1,6 @@
 # dev-ops-exercise
 
-[![CircleCI](https://circleci.com/gh/pedroguima/exercise-dev-ops/tree/automate_it.svg?style=svg)](https://circleci.com/gh/pedroguima/exercise-dev-ops/tree/automate_it)
+[![CircleCI](https://circleci.com/gh/pedroguima/exercise-dev-ops/tree/develop.svg?style=svg)](https://circleci.com/gh/pedroguima/exercise-dev-ops/tree/develop)
 
 ![Our little system](./dev-ops-exercise_201709.png)
 
