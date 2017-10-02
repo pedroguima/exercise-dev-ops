@@ -19,7 +19,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 
-	pb "github.com/tokencard/dev-ops-exercise/src/routeguide"
+	pb "github.com/pedroguima/exercise-dev-ops/src/routeguide"
 )
 
 var (
@@ -148,7 +148,7 @@ func main() {
 
 	g := grpc.NewServer()
 	pb.RegisterRouteGuideServer(g, new(backendServer))
-	log.Printf("backend listening on  :%d...\n", *backendPort)
+	log.Printf("TEST: backend listening on  :%d...\n", *backendPort)
 	g.Serve(lis)
 }
 

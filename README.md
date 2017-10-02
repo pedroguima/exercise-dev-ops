@@ -1,93 +1,77 @@
 # dev-ops-exercise
-A simple exercise for our future dev-ops to promote their skills.
 
-## Introduction
+[![CircleCI](https://circleci.com/gh/pedroguima/exercise-dev-ops/tree/automate_it.svg?style=svg)](https://circleci.com/gh/pedroguima/exercise-dev-ops/tree/automate_it)
 
-   Your mission, should you choose to accept it, involves the packaging and deployment of 3 μServices.
+![Our little system](./dev-ops-exercise_201709.png)
 
-   Please read the following instructions before starting to implement your mission, you don't want to miss any important instruction, especially those in General Guidelines
 
-   Get your environment ready.
+## Building and packaging
 
-   Just know that we develop on Osx/Sierra and wish to deploy an efficient `image` in production on Google Cloud Platform.
+   The sources are compiled (``ci/build.sh``) and included in a minimal container during the build stage (``circleci/config.yml``). The new container images are then pushed to docker hub: [tcbackend](https://hub.docker.com/r/pedroguima/tcbackend/) and [tcserver](https://hub.docker.com/r/pedroguima/tcserver).
 
-   Ready for action?
 
-   Great.
-   Your project is simple, as a DevOps you need to have the ability to package μServices and create a mechanism for deploying them.
-   Below, you can find the description of your tasks.
-
-## Packaging
-
-   We have 3 μServices: written in Go, using GRPC and protocol buffers, a Key/Value DB (LMDB, a C library, requires its runtime).
-
-   ![Our little system](./dev-ops-exercise_201709.png)
-
-   We want to containerize them: the strategy is yours.
-   We look forward to hearing your rationale.
 
 ## Deployment
 
-   We want to deploy them on __Google Cloud Platform__ and run them under __Kubernetes__ (Google Container Engine).
+   These services are deployed to __Google Cloud Platform__ under __Kubernetes__ (Google Container Engine).
 
-   You could use __gcloud SDK__ and __minikube__ (local Kubernetes) to do it locally.
+   2 replicas are deployed with 2 containers per pod.
 
-   We expect to have at least 2 replicas (resiliency), and expect you to demonstrate to us how to scale our cluster to 5 replicas.
+   To increase the number of replicas update the file (``ci/k8s.yml``), commit and run:
+   
+   ``kubectl apply -f ci/k8s.yml``
+    
+
 
 ## Automation
 
-   This mission would not be complete without automation.
+  All the automation is done by CircleCI. Please check ``.circleci/`` for further information.
 
-   We are keen to rerun automatically your packaging and deployment whenever a change occurs.
 
-## Expected Deliverables
 
-   A GitHub Pull-Request to YOUR FORKED REPO, containing:
+## To do
 
-   1. What your consider is necessary for any developer to use your automated solution/service.
-   2. What you feel should be required (within the context of this exercise)
+  - Use `scratch` image instead of ``debian`` as that would be more efficient (would need to fix the static libraries reference problem);
+  - Don't build if only non-relevant files are updated;
+  - Should ``client`` also be a containerized microservice? If so, adding it should be trivial.
+
+
+
+## Testing the remote application: 
+
+The backend and the server are deployed on GCloud at ```tcexercise.thisispedro.com:8888```.
+
+    1> cd client
+    1> go run client.go
+
+In this terminal you should receive a list of responses from the `server`.
+
+In the server terminal a response from the backend (check container logs).
+
+In the backend a list of saved data (check container logs).
+
+
 
 ##  General Guidelines
 
-   Your implementation should be as simple as possible, yet well documented and robust (easy to use and maintain/enhance).
-
-   Spend some time on designing your solution. Think about operational use cases from the real world. Few examples:
-
        Can you run your implementation multiple times without any problem?
+Yes.
+
+
        What happens if a service crashes?
+k8s will rollout other pod to replace it.
+
        How would a new Version be deployed to replace the previous one?
+       
+Do the changes, commit, PR to ```develop``` branch, merge and wait for [CircleCI](https://circleci.com/gh/pedroguima/exercise-dev-ops) to finish the pipeline.
+       
        How would you organized a rollback?
+
+``kubectl rollout history deployment/tcexercise-deployment``
+``kubectl rollout undo deployment/tcexercise-deployment`` or ``kubectl set image deployment/tcexercise-deployment $SERVICE=$DOCKER_REPO/$DOCKER_USER/$SERVICE:"PROPER_VERSION```
+
+
        How much effort will it take to create a new service? D.R.Y!
-       etc...
 
-   And tell us how you decided on the solution you are coming up with.
-
-   We sincerely look forward to your approach and solution to this task. And if satisfactory, we will discuss it together in the next meeting.
-
-   Good luck!
-
-## If you are curious
-
-To run the backend, the server and the client, open 3 different terminals.
-
-In the first, go to the backend/ folder and from there start the backend, serving the DB:
-
-    1> cd backend
-    1> go run backend.go
-
-Second, start the server (our `front-end`) from the server/ folder:
-
-    2> cd server
-    2> go run server.go
-
-Last, in the third terminal,  run the client:
-
-    3> cd client
-    3> go run client.go
-
-In this third terminal you should receive a list of responses from the `server`.
-
-In the server terminal a response from the backend.
-
-In the backend a list of saved data.
+This will depend on the service. Questions would need to be asked.
 
