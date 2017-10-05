@@ -68,8 +68,11 @@ Do the changes, commit, PR to ```develop``` branch, merge and wait for [CircleCI
        How would you organized a rollback?
 
 ``kubectl rollout history deployment/tcexercise-deployment``
+
 ``kubectl rollout undo deployment/tcexercise-deployment`` 
+
 or 
+
 ``kubectl set image deployment/tcexercise-deployment $SERVICE=$DOCKER_REPO/$DOCKER_USER/$SERVICE:"PROPER_VERSION``
 
 
