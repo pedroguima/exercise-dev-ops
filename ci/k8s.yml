@@ -1,0 +1,47 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: tcexercise-deployment
+spec:
+  selector:
+    matchLabels:
+      app: tcexercise 
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: tcexercise 
+    spec:
+      containers:
+      - name: tcbackend
+        image: docker.io/pedroguima/tcbackend
+        ports:
+        - containerPort: 9999
+      - name: tcserver 
+        image: docker.io/pedroguima/tcserver
+        ports:
+        - containerPort: 8888
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: tcexercise-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: tcexercise
+  ports:
+  - protocol: TCP
+    port: 8888
+    targetPort: 8888 
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tcclient 
+  labels:
+    app: tcexercise
+spec:
+  containers:
+    - name: tcclient 
+      image: docker.io/pedroguima/tcclient 
